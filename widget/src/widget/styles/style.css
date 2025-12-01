@@ -1,15 +1,29 @@
 .widget-container {
-    @apply fixed bottom-5 right-5 w-[300px] h-[400px] bg-white border border-gray-200 rounded-lg shadow-lg z-[9999];
+    @apply fixed bottom-5 right-5 w-[300px] h-[400px] bg-[#222222] rounded-lg shadow-lg z-[9999];
+    border: 1px solid white;
 }
 
 .widget-button {
-    @apply fixed bottom-5 right-5 px-6 py-3 bg-indigo-600 text-white border-none rounded-lg cursor-pointer z-[9999];
+    @apply fixed bottom-5 right-5 px-6 py-3 bg-[#FF6D1F] text-white border-none rounded-lg cursor-pointer z-[9999];
+}
+
+.widget-close-button {
+    @apply bg-transparent text-white border-none text-lg font-bold cursor-pointer;
 }
 
 .widget-header {
-    @apply p-3 border-b border-gray-200 flex justify-between items-center;
+    @apply p-3 flex justify-between items-center;
 }
 
 .widget-content {
-    @apply p-4;
+    @apply p-4 flex flex-col gap-9;
+}
+
+.widget-content textarea {
+    @apply p-2 h-[150px]  text-white rounded-lg resize-none leading-[1.4];
+}
+
+.widget-content button {
+    @apply mt-2 py-2 bg-[#FF6D1F] text-white border-none rounded-lg cursor-pointer;
+ 
 }
