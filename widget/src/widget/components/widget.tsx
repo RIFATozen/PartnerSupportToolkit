@@ -3,22 +3,47 @@ import { WidgetContext } from '../lib/context';
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY,
+  'https://pongpaisqlqcfkpowksh.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBvbmdwYWlzcWxxY2ZrcG93a3NoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MTU3NTUsImV4cCI6MjA4MDA5MTc1NX0.h0QDiUycs1haQRAfd_HR0cTXZH3BZPrrEQHwWofr8Eo',
 );
 
 export function Widget() {
   const [feedback, setFeedback] = useState('');
+  const { isOpen, setIsOpen } = useContext(WidgetContext);
 
+  const { clientKey } = useContext(WidgetContext);
   const handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setFeedback(e.target.value);
   };
 
   async function sendFeedback() {
-    await supabase.from('feedback').insert([{ message: feedback }]);
-  }
+    if (!feedback.trim()) return;
 
-  const { isOpen, setIsOpen } = useContext(WidgetContext);
+    if (!clientKey) {
+      console.error('Partner ID (data-client-key) bulunamadı!');
+      return;
+    }
+
+    const { error } = await supabase.from('feedback').insert([
+      {
+        partner_id: clientKey,
+        message: feedback,
+        page_url: window.location.href,
+        metadata: {
+          userAgent: navigator.userAgent,
+          viewport: `${window.innerWidth}x${window.innerHeight}`,
+        },
+      },
+    ]);
+
+    if (error) {
+      console.error('Insert error:', error);
+      return;
+    }
+
+    setFeedback('');
+    setIsOpen(false);
+  }
 
   if (!isOpen) {
     return (
