@@ -24,11 +24,21 @@ export async function proxy(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  console.log ({ user });
+
+  const path = request.nextUrl.pathname;
+
+  const publicRoutes = ["/", "/login", "/signup", "/onboarding"];
 
   // Redirect non-authenticated users away from protected routes
-  if (!user && request.nextUrl.pathname.startsWith("/protected")) {
+  if (
+    !user &&
+    (path.startsWith("/dashboard") || path.startsWith("/onboarding"))
+  ) {
     return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  if (user && publicRoutes.includes(path)) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
   return response;
 }
