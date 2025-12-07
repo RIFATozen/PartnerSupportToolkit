@@ -7,25 +7,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { MessageSquare, Shield, Zap } from "lucide-react";
+import { MobileNav } from "@/components/landing/mobile-nav";
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
       <header className="container mx-auto px-4 py-6">
         <nav className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">PartnerSupportToolkit</h1>
-          <div className="flex gap-4">
+          <h1 className="text-2xl font-bold">SupportToolkit</h1>
+          <div className="hidden gap-4 sm:flex">
             <Link href="/login">
-              <Button asChild variant="ghost">
-                <span>Login</span>
-              </Button>
+              <Button variant="ghost">Login</Button>
             </Link>
             <Link href="/signup">
-              <Button asChild>
-                <span>Get Started</span>
-              </Button>
+              <Button>Get Started</Button>
             </Link>
           </div>
+          <MobileNav />
         </nav>
       </header>
 
