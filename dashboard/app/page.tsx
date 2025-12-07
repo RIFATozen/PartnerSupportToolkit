@@ -83,7 +83,7 @@ export default function HomePage() {
               Add this single line of code to your website to start collecting
               feedback:
             </p>
-            <div className="rounded-md bg-muted p-4 font-mono text-sm">
+            <div className="rounded-md bg-muted p-4 font-mono text-xs">
               <code className="text-foreground">
                 {
                   '<script async src="https://partner-support-toolkit.vercel.app/widget.js" data-client-key="your-key"></script>'
