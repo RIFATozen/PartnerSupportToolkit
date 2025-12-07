@@ -13,7 +13,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
       <header className="container mx-auto px-4 py-6">
         <nav className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">FeedbackHub</h1>
+          <h1 className="text-2xl font-bold">ProjectSupportToolkit</h1>
           <div className="flex gap-4">
             <Link href="/login">
               <Button asChild variant="ghost">
@@ -75,6 +75,25 @@ export default function HomePage() {
                 </CardDescription>
               </CardHeader>
             </Card>
+          </div>
+
+          <div className="rounded-lg border bg-card p-8 text-left">
+            <h3 className="mb-4 text-2xl font-bold">Quick Integration</h3>
+            <p className="mb-4 text-muted-foreground">
+              Add this single line of code to your website to start collecting
+              feedback:
+            </p>
+            <div className="rounded-md bg-muted p-4 font-mono text-sm">
+              <code className="text-foreground">
+                {
+                  '<script src="https://partner-support-toolkit.vercel.app/widget.js" data-key="your-key"></script>'
+                }
+              </code>
+            </div>
+            <p className="mt-4 text-sm text-muted-foreground">
+              Replace <span className="font-semibold">your-key</span> with your
+              unique API key from the dashboard.
+            </p>
           </div>
 
           <div className="rounded-lg border bg-card p-8 text-left">
