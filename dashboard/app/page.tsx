@@ -13,7 +13,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
       <header className="container mx-auto px-4 py-6">
         <nav className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">ProjectSupportToolkit</h1>
+          <h1 className="text-2xl font-bold">PartnerSupportToolkit</h1>
           <div className="flex gap-4">
             <Link href="/login">
               <Button asChild variant="ghost">
@@ -86,33 +86,14 @@ export default function HomePage() {
             <div className="rounded-md bg-muted p-4 font-mono text-sm">
               <code className="text-foreground">
                 {
-                  '<script src="https://partner-support-toolkit.vercel.app/widget.js" data-key="your-key"></script>'
+                  '<script async src="https://partner-support-toolkit.vercel.app/widget.js" data-client-key="your-key"></script>'
                 }
               </code>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
               Replace <span className="font-semibold">your-key</span> with your
-              unique API key from the dashboard.
+              unique key from the dashboard.
             </p>
-            <div className="mt-4 flex items-start gap-2 rounded-md bg-red-50 p-3 dark:bg-red-950/20">
-              <svg
-                className="mt-0.5 h-5 w-5 shrink-0 text-red-600 dark:text-red-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <p className="text-sm text-red-700 dark:text-red-300">
-                Currently, the widget is optimized for React projects. Support
-                for other frameworks is coming soon.
-              </p>
-            </div>
           </div>
 
           <div className="rounded-lg border bg-card p-8 text-left">
