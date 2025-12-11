@@ -17,10 +17,14 @@ export default function HomePage() {
           <h1 className="text-2xl font-bold">SupportToolkit</h1>
           <div className="hidden gap-4 sm:flex">
             <Link href="/login">
-              <Button variant="ghost">Login</Button>
+              <Button variant="ghost" asChild>
+                <span>Login</span>
+              </Button>
             </Link>
             <Link href="/signup">
-              <Button>Get Started</Button>
+              <Button asChild>
+                <span>Get Started</span>
+              </Button>
             </Link>
           </div>
           <MobileNav />

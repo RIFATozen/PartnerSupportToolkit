@@ -59,7 +59,7 @@ export function LoginForm() {
       <Button
         type="button"
         variant="outline"
-        className="w-full bg-transparent"
+        className="w-full bg-transparent cursor-pointer"
         onClick={handleGoogleLogin}
         disabled={googleLoading || loading}
       >
@@ -124,7 +124,7 @@ export function LoginForm() {
         )}
         <Button
           type="submit"
-          className="w-full"
+          className="w-full cursor-pointer"
           disabled={loading || googleLoading}
         >
           {loading ? "Signing in..." : "Sign in"}

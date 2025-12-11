@@ -109,7 +109,7 @@ export function SignupForm() {
       <Button
         type="button"
         variant="outline"
-        className="w-full bg-transparent"
+        className="w-full bg-transparent cursor-pointer"
         onClick={handleGoogleSignup}
         disabled={googleLoading || loading}
       >
@@ -190,7 +190,7 @@ export function SignupForm() {
         )}
         <Button
           type="submit"
-          className="w-full"
+          className="w-full cursor-pointer"
           disabled={loading || googleLoading}
         >
           {loading ? "Creating account..." : "Create account"}

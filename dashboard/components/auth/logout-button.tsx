@@ -14,7 +14,7 @@ export function LogoutButton() {
   };
 
   return (
-    <Button variant="ghost" onClick={handleLogout}>
+    <Button variant="ghost" className="cursor-pointer" onClick={handleLogout}>
       Logout
     </Button>
   );

@@ -6,7 +6,13 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function OnboardingPage() {
   const [companyName, setCompanyName] = useState("");
@@ -19,8 +25,12 @@ export default function OnboardingPage() {
   function slugify(text: string) {
     return text
       .toLowerCase()
-      .replace(/ğ/g, "g").replace(/ü/g, "u").replace(/ş/g, "s")
-      .replace(/ı/g, "i").replace(/ö/g, "o").replace(/ç/g, "c")
+      .replace(/ğ/g, "g")
+      .replace(/ü/g, "u")
+      .replace(/ş/g, "s")
+      .replace(/ı/g, "i")
+      .replace(/ö/g, "o")
+      .replace(/ç/g, "c")
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
   }
@@ -31,7 +41,9 @@ export default function OnboardingPage() {
     setError(null);
 
     // 1) Auth kullanıcısını al
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       setError("Not authenticated.");
       setLoading(false);
@@ -41,12 +53,10 @@ export default function OnboardingPage() {
     // 2) Partner oluştur
     const partnerId = slugify(companyName);
 
-    const { error: partnerError } = await supabase
-      .from("partners")
-      .insert({
-        id: partnerId,
-        name: companyName,
-      });
+    const { error: partnerError } = await supabase.from("partners").insert({
+      id: partnerId,
+      name: companyName,
+    });
 
     if (partnerError) {
       setError("Failed to create partner.");
@@ -55,12 +65,10 @@ export default function OnboardingPage() {
     }
 
     // 3) dashboard_users kaydı
-    const { error: linkError } = await supabase
-      .from("dashboard_users")
-      .insert({
-        user_id: user.id,
-        partner_id: partnerId,
-      });
+    const { error: linkError } = await supabase.from("dashboard_users").insert({
+      user_id: user.id,
+      partner_id: partnerId,
+    });
 
     if (linkError) {
       setError("Failed to link user to partner.");
@@ -81,7 +89,6 @@ export default function OnboardingPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-
             <div className="space-y-2">
               <Label htmlFor="companyName">Company Name</Label>
               <Input
@@ -92,11 +99,13 @@ export default function OnboardingPage() {
               />
             </div>
 
-            {error && (
-              <p className="text-red-500 text-sm">{error}</p>
-            )}
+            {error && <p className="text-red-500 text-sm">{error}</p>}
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button
+              type="submit"
+              className="w-full cursor-pointer"
+              disabled={loading}
+            >
               {loading ? "Saving..." : "Continue"}
             </Button>
           </form>
