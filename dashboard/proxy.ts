@@ -1,25 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createSupabaseServerClient } from "./lib/supabase/server-client";
-/**
- * Next.js proxy (formerly middleware) entry point responsible for basic auth gating.
- *
- * Runtime assumptions due to conflicting docs (Next.js 16):
- * - Proxy runs in the Node.js runtime by default (not Edge)
- * - Node runtime grants access to the shared cookie store used by Supabase
- *
- * What happens per request:
- * - Instantiate the Supabase server client (shares cookies via `NextResponse`)
- * - Call `supabase.auth.getUser()` which refreshes tokens if necessary
- * - Redirect anonymous users away from `/protected` routes to `/login`
- *
- * Add extra path checks or redirects here when you need more complex routing rules.
- */
+
 export async function proxy(request: NextRequest) {
   const response = NextResponse.next({
     request: {
       headers: request.headers,
     },
   });
+
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
@@ -27,9 +15,9 @@ export async function proxy(request: NextRequest) {
 
   const path = request.nextUrl.pathname;
 
-  const publicRoutes = ["/", "/login", "/signup", "/onboarding"];
+  const publicRoutes = ["/", "/login", "/signup"];
 
-  // Redirect non-authenticated users away from protected routes
+  // 1) User yoksa → dashboard & onboarding yasak
   if (
     !user &&
     (path.startsWith("/dashboard") || path.startsWith("/onboarding"))
@@ -37,8 +25,32 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (user && publicRoutes.includes(path)) {
+  // Eğer kullanıcı yoksa ve public route ise devam et
+  if (!user) return response;
+
+  // 2) User varsa → partner_id kontrolü
+  const { data: link } = await supabase
+    .from("dashboard_users")
+    .select("partner_id")
+    .eq("user_id", user.id)
+    .single();
+
+  const partnerId = link?.partner_id;
+
+  // 3) User var + partner yok → dashboard'a giremesin → onboarding'e zorla
+  if (!partnerId && path.startsWith("/dashboard")) {
+    return NextResponse.redirect(new URL("/onboarding", request.url));
+  }
+
+  // 4) User var + partner VAR → onboarding'e giremesin → dashboard'a zorla
+  if (partnerId && path.startsWith("/onboarding")) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
+
+  // User var + partner var → public sayfalara giremesin
+  if (partnerId && publicRoutes.includes(path)) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
   return response;
 }

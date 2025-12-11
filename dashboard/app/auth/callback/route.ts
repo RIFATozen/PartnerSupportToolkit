@@ -4,24 +4,39 @@ import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  // Eğer "next" parametresi varsa oraya, yoksa dashboard'a yönlendir
-  const next = searchParams.get("next") ?? "/dashboard";
 
-  if (code) {
-
-    // Callback rotasında cookie'leri MANUEL olarak yöneten client oluşturuyoruz.
-    // Çünkü burada cookie SET etmemiz gerekiyor (Oturum açma işlemi).
-    const supabase = await createSupabaseServerClient();
-
-    // Google'dan gelen "code"u alıp session'a çeviriyoruz
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-    if (!error) {
-      // Başarılı olursa kullanıcıyı asıl gitmek istediği yere yönlendiriyoruz
-      return NextResponse.redirect(`${origin}${next}`);
-    }
+  if (!code) {
+    return NextResponse.redirect(`${origin}/login?error=no-code`);
   }
 
-  // Hata varsa login sayfasına geri gönder
-  return NextResponse.redirect(`${origin}/login?error=auth-code-error`);
+  const supabase = await createSupabaseServerClient();
+
+  // 1) Google'dan dönen code'u session'a dönüştür
+  const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+  if (error) {
+    return NextResponse.redirect(`${origin}/login?error=auth-failed`);
+  }
+
+  // 2) Session'daki user'ı çek
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.redirect(`${origin}/login?error=no-user`);
+  }
+
+  // 3) Kullanıcının partner_id'sini DB'den çek
+  const { data: link } = await supabase
+    .from("dashboard_users")
+    .select("partner_id")
+    .eq("user_id", user.id)
+    .single();
+
+  // 4) Eğer partner ID varsa → dashboard’a
+  if (link?.partner_id) {
+    return NextResponse.redirect(`${origin}/dashboard`);
+  }
+
+  // 5) Partner ID yoksa → onboarding’e
+  return NextResponse.redirect(`${origin}/onboarding`);
 }
